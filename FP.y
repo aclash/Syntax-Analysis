@@ -14,7 +14,7 @@
 %token <string> TBoolean Tinteger Tfloat TString Tidentifier
 %token <token> TCEQ TCNE TCLT TCLE TCGT TCGE TPRINT
 %token PROGRAM FUNCTION RETURN IF THEN ELSE WHILE DO OR AND 
-%type <node> program program_name function_definitions statements statement function_definition function_name arguments argument return_arg assignment_stmt parameter number
+%type <node> program program_name function_definitions statements statement function_definition function_name arguments argument return_arg assignment_stmt parameters parameter number predefined_function function_call if_stmt expression while_stmt comparison_operator Boolean_operator
 
 %left '+' '-'
 %left '*' '/' '%'
@@ -45,7 +45,6 @@ function_definitions : function_definitions function_definition {
 	$$->children.push_back($1);
 	$$->children.push_back($2);
 	cout << "function_definitions : function_definitions function_definition" <<endl;	
-	
 }
 | %empty {
 	$$ = new Node("function_definitions - epsilon");
@@ -122,6 +121,69 @@ statement : assignment_stmt {
 	$$->children.push_back($1);
 	cout << "statement : assignment_stmt" <<endl;	
 }
+| function_call {
+	$$ = new Node("statement");
+	$$->children.push_back($1);
+}
+| if_stmt {
+	$$ = new Node("statement");
+	$$->children.push_back($1);
+}
+| while_stmt {
+	$$ = new Node("statement");
+	$$->children.push_back($1);
+}
+
+function_call : '{' function_name parameters '}' {
+	$$ = new Node("function_call"); 
+	$$->children.push_back(new Node("{")); 
+	$$->children.push_back($2);
+	$$->children.push_back($3);
+	$$->children.push_back(new Node("}"));
+}
+| '{' predefined_function parameters '}' {
+	$$ = new Node("function_call"); 
+	$$->children.push_back(new Node("{")); 
+	$$->children.push_back($2);
+	$$->children.push_back($3);
+	$$->children.push_back(new Node("}"));
+}
+
+predefined_function : '+' {
+	$$ = new Node("predefined_function");
+	$$->children.push_back(new Node("+")); 
+}
+| '-' {
+	$$ = new Node("predefined_function");
+	$$->children.push_back(new Node("-")); 
+}
+| '*' {
+	$$ = new Node("predefined_function");
+	$$->children.push_back(new Node("*")); 
+}
+| '/' {
+	$$ = new Node("predefined_function");
+	$$->children.push_back(new Node("/")); 
+}
+| '%' {
+	$$ = new Node("predefined_function");
+	$$->children.push_back(new Node("%")); 
+}
+| TPRINT {
+	$$ = new Node("predefined_function");
+	$$->children.push_back(new Node("print"));
+}
+
+parameters : parameters parameter {
+	$$ = new Node("parameters");
+	$$->children.push_back($1);
+	$$->children.push_back($2);
+	cout << "parameters : parameters parameter" <<endl;	
+}
+| %empty {
+	$$ = new Node("parameters - epsilon");
+	cout << "parameters : epsilon" <<endl;
+}
 
 assignment_stmt : '{' '=' Tidentifier parameter '}' { 
 	$$ = new Node("assignment_stmt"); 
@@ -134,10 +196,29 @@ assignment_stmt : '{' '=' Tidentifier parameter '}' {
 	cout << "assignment_stmt : '{' '=' Tidentifier parameter '}'" <<endl;
 }
 
-parameter : number { 
+parameter : function_call {
+	$$ = new Node("parameter"); 
+	$$->children.push_back($1);
+}
+| Tidentifier {
+	$$ = new Node("parameter"); 
+	$$->children.push_back(new Node(*$1)); 
+	delete $1;
+}
+| number { 
 	$$ = new Node("parameter"); 
 	$$->children.push_back($1);
 	cout << "parameter : number" <<endl;
+}
+| TString {
+	$$ = new Node("parameter"); 
+	$$->children.push_back(new Node(*$1)); 
+	delete $1;
+}
+| TBoolean {
+	$$ = new Node("parameter"); 
+	$$->children.push_back(new Node(*$1)); 
+	delete $1;
 }
 
 number : Tinteger {
@@ -146,4 +227,88 @@ number : Tinteger {
 	delete $1;
 	cout << "number : Tinteger" <<endl;
 }
+| Tfloat {
+	$$ = new Node("number"); 
+	$$->children.push_back(new Node(*$1)); 
+	delete $1;
+}
+
+if_stmt : '{' IF expression THEN statements ELSE statements '}' {
+	$$ = new Node("if_stmt"); 
+	$$->children.push_back(new Node("{")); 
+	$$->children.push_back(new Node("if"));
+	$$->children.push_back($3);
+	$$->children.push_back(new Node("then"));
+	$$->children.push_back($5);
+	$$->children.push_back(new Node("else"));
+	$$->children.push_back($7);
+	$$->children.push_back(new Node("}"));
+}
+
+while_stmt : '{' WHILE expression DO statements '}' {
+	$$ = new Node("while_stmt"); 
+	$$->children.push_back(new Node("{")); 
+	$$->children.push_back(new Node("while"));
+	$$->children.push_back($3);
+	$$->children.push_back(new Node("do"));
+	$$->children.push_back($5);
+	$$->children.push_back(new Node("}"));
+}
+
+expression : '{' comparison_operator parameter parameter '}' {
+	$$ = new Node("expression"); 
+	$$->children.push_back(new Node("{")); 
+	$$->children.push_back($2);
+	$$->children.push_back($3);
+	$$->children.push_back($4);
+	$$->children.push_back(new Node("}"));
+}
+| '{' Boolean_operator expression expression '}' {
+	$$ = new Node("expression"); 
+	$$->children.push_back(new Node("{")); 
+	$$->children.push_back($2);
+	$$->children.push_back($3);
+	$$->children.push_back($4);
+	$$->children.push_back(new Node("}"));
+}
+| TBoolean {
+	$$ = new Node("expression"); 
+	$$->children.push_back(new Node(*$1)); 
+	delete $1;
+}
+
+comparison_operator : TCEQ {
+	$$ = new Node("comparison_operator"); 
+	$$->children.push_back(new Node("=="));
+}
+| TCGT {
+	$$ = new Node("comparison_operator"); 
+	$$->children.push_back(new Node(">"));
+} 
+| TCLT {
+	$$ = new Node("comparison_operator"); 
+	$$->children.push_back(new Node("<"));
+} 
+| TCGE {
+	$$ = new Node("comparison_operator"); 
+	$$->children.push_back(new Node(">="));
+} 
+| TCLE {
+	$$ = new Node("comparison_operator"); 
+	$$->children.push_back(new Node("<="));
+} 
+| TCNE {
+	$$ = new Node("comparison_operator"); 
+	$$->children.push_back(new Node("!="));
+}
+
+Boolean_operator : OR {
+	$$ = new Node("Boolean_operator"); 
+	$$->children.push_back(new Node("or"));
+}
+| AND {
+	$$ = new Node("Boolean_operator"); 
+	$$->children.push_back(new Node("and"));
+}
+
 %%
