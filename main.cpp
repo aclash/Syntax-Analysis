@@ -9,7 +9,7 @@ int main(int argc, char **argv)
 	while (!curScope.empty())
 		curScope.pop();	
     yyparse();
-	PrintParseTree();
+	PrintParseTree(root, 0);
 	PrintSymbolTbl();
     return 0;
 }

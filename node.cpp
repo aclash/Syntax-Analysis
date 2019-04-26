@@ -41,19 +41,11 @@ void PrintSymbolTbl() {
 	}
 }
 
-void PrintParseTree() {
-	/*int identNum = 0;
-	while (!parseTreeSTK.empty()) {
-		Node* tmp = parseTreeSTK.top();
-		parseTreeSTK.pop();
-		vector<Node*> tmpVec = tmp->children;
-		cout << tmp->name << endl;
-		++identNum;
-		for (int i = 0; i < tmpVec.size(); ++i) {
-			for (int j = 0; j < identNum; ++j) {
-				cout << " ";
-			}
-			cout << tmpVec[i]->name << endl;
-		}
-	}*/
+void PrintParseTree(Node* node, int indents) {
+	for (int i = 0; i < indents; ++i)
+		cout << " ";
+	cout << node->name << endl;
+	for (int i = 0; i < node->children.size(); ++i) {
+		PrintParseTree(node->children[0], ++indents);
+	}
 }
