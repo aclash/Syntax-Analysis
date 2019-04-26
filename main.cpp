@@ -9,6 +9,7 @@ int main(int argc, char **argv)
 	while (!curScope.empty())
 		curScope.pop();	
     yyparse();
+	cout << "ParseTress as follows:" << endl;
 	PrintParseTree(root, 0);
 	PrintSymbolTbl();
     return 0;

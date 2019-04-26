@@ -43,9 +43,9 @@ void PrintSymbolTbl() {
 
 void PrintParseTree(Node* node, int indents) {
 	for (int i = 0; i < indents; ++i)
-		cout << " ";
+		cout << "  ";
 	cout << node->name << endl;
 	for (int i = 0; i < node->children.size(); ++i) {
-		PrintParseTree(node->children[0], ++indents);
+		PrintParseTree(node->children[i], indents + 1);
 	}
 }
