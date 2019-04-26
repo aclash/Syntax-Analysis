@@ -10,6 +10,9 @@ using namespace std;
 struct Node {
 	string name;
 	vector<Node*> children;
+	Node(string _name) {
+		name = _name;
+	}
 };
 
 struct Symbol {
@@ -38,6 +41,7 @@ extern vector<vector<string>> output;
 extern stack<int> curScope;
 extern stack<Node*> parseTreeSTK;
 extern int maxScope;
+extern Node* root;
 extern void MeetLeftBrace();
 extern void MeetRightBrace();
 extern void Insert(string str);

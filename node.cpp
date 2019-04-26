@@ -7,6 +7,7 @@ vector<vector<string>> output;
 stack<int> curScope;
 stack<Node*> parseTreeSTK;
 int maxScope = 0;
+Node* root = nullptr;
 
 void MeetLeftBrace() {
 	++scopeNum;

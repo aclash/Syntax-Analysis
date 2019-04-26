@@ -1,3 +1,4 @@
 {Program Sample
-	{= retVal 33}
+	{= Val1 33}
+	{= Val2 42.3}
 }
