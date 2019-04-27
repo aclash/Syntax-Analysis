@@ -9,9 +9,13 @@
 			{= VAL {- VAL 1}}
 		}
 		}
+		{if {and {== VAL (aabb\\\cc)} {!= VAL T} }
+			then {= retVal 3.5}
+		else 
+			{= VV F}
+		}
 		return retVal
 	}
 	{print {facto 999}
 	}
 }
-

@@ -37,9 +37,9 @@ PREDEFINED_FUNCTION "print"
 "<=" {return TOKEN(TCLE);}
 ">" {return TOKEN(TCGT);}
 ">=" {return TOKEN(TCGE);}
-{OPERATOR} { string tmp = yytext; if(tmp == "{") MeetLeftBrace(); if (tmp == "}") MeetRightBrace(); return yytext[0];}
+{OPERATOR} { string tmp = yytext; /*if(tmp == "{") MeetLeftBrace(); if (tmp == "}") MeetRightBrace();*/ return yytext[0];}
 {PREDEFINED_FUNCTION} {return TOKEN(TPRINT);}
 {STRING} {SAVE_TOKEN; return TString;}
-{IDENTIFIER} {string tmp = yytext; Insert(tmp); SAVE_TOKEN; return Tidentifier;}
+{IDENTIFIER} {/*string tmp = yytext; Insert(tmp);*/ SAVE_TOKEN; return Tidentifier;}
 [ \t]+ {}
 %%

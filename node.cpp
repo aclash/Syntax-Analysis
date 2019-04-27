@@ -49,3 +49,10 @@ void PrintParseTree(Node* node, int indents) {
 		PrintParseTree(node->children[i], indents + 1);
 	}
 }
+
+void DeleteTree(Node* node) {
+	for (int i = 0; i < node->children.size(); ++i) {
+		DeleteTree(node->children[i]);
+	}
+	delete node;
+}

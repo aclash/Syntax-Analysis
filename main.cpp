@@ -12,5 +12,6 @@ int main(int argc, char **argv)
 	cout << "ParseTress as follows:" << endl;
 	PrintParseTree(root, 0);
 	PrintSymbolTbl();
+	DeleteTree(root);
     return 0;
 }

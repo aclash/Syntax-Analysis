@@ -47,4 +47,5 @@ extern void MeetRightBrace();
 extern void Insert(string str);
 extern void PrintSymbolTbl();
 extern void PrintParseTree(Node* node, int indents);
+extern void DeleteTree(Node* node);
 #endif
