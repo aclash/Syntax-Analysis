@@ -18,9 +18,9 @@ OPERATOR [-/+*()=%{}]
 PREDEFINED_FUNCTION "print"
 %%
 \n {++line;}
-{BOOLEAN} { string tmp = yytext; Insert(tmp); SAVE_TOKEN; return TBoolean;}
-{INTEGER} { string tmp = yytext; Insert(tmp); SAVE_TOKEN; return Tinteger;}
-{FLOAT} { string tmp = yytext; Insert(tmp); SAVE_TOKEN; return Tfloat;}
+{BOOLEAN} {SAVE_TOKEN; return TBoolean;}
+{INTEGER} {SAVE_TOKEN; return Tinteger;}
+{FLOAT} {SAVE_TOKEN; return Tfloat;}
 "Program" return PROGRAM;
 "Function" return FUNCTION;
 "return" return RETURN;
@@ -37,9 +37,9 @@ PREDEFINED_FUNCTION "print"
 "<=" {return TOKEN(TCLE);}
 ">" {return TOKEN(TCGT);}
 ">=" {return TOKEN(TCGE);}
-{OPERATOR} { string tmp = yytext; if(tmp == "{") MeetLeftBrace(); if (tmp == "}") MeetRightBrace(); return yytext[0];}
+{OPERATOR} { /*string tmp = yytext; if(tmp == "{") MeetLeftBrace(); if (tmp == "}") MeetRightBrace();*/ return yytext[0];}
 {PREDEFINED_FUNCTION} {return TOKEN(TPRINT);}
-{STRING} {string tmp = yytext; Insert(tmp);SAVE_TOKEN; return TString;}
-{IDENTIFIER} {string tmp = yytext; Insert(tmp); SAVE_TOKEN; return Tidentifier;}
+{STRING} {SAVE_TOKEN; return TString;}
+{IDENTIFIER} {/*string tmp = yytext; Insert(tmp); */SAVE_TOKEN; return Tidentifier;}
 [ \t]+ {}
 %%

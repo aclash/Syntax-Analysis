@@ -33,7 +33,7 @@ program : '{' PROGRAM program_name function_definitions statements'}' {
 
 program_name : Tidentifier {
 	$$ = new Node("program_name"); 
-	$$->children.push_back(new Node(*$1));
+	$$->children.push_back(new Node(*$1, "program_name"));
 	delete $1;
 }
 
@@ -60,7 +60,7 @@ function_definition : '{' FUNCTION function_name arguments statements RETURN ret
 
 function_name : Tidentifier {
 	$$ = new Node("function_name"); 
-	$$->children.push_back(new Node(*$1));
+	$$->children.push_back(new Node(*$1, "function_name"));
 	delete $1;
 }
 
@@ -75,13 +75,13 @@ arguments : arguments argument {
 
 argument : Tidentifier {
 	$$ = new Node("argument"); 
-	$$->children.push_back(new Node(*$1));
+	$$->children.push_back(new Node(*$1, "argument"));
 	delete $1;
 }
 
 return_arg : Tidentifier {
 	$$ = new Node("return_arg"); 
-	$$->children.push_back(new Node(*$1));  
+	$$->children.push_back(new Node(*$1, "return_arg"));  
 	delete $1;
 }
 | %empty {
@@ -168,7 +168,7 @@ assignment_stmt : '{' '=' Tidentifier parameter '}' {
 	$$ = new Node("assignment_stmt"); 
 	$$->children.push_back(new Node("{")); 
 	$$->children.push_back(new Node("=")); 
-	$$->children.push_back(new Node(*$3)); 
+	$$->children.push_back(new Node(*$3, "parameter")); 
 	delete $3;
 	$$->children.push_back($4); 
 	$$->children.push_back(new Node("}"));
@@ -180,7 +180,7 @@ parameter : function_call {
 }
 | Tidentifier {
 	$$ = new Node("parameter"); 
-	$$->children.push_back(new Node(*$1)); 
+	$$->children.push_back(new Node(*$1, "parameter")); 
 	delete $1;
 }
 | number { 
